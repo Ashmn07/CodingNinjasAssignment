@@ -4,6 +4,7 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Pagination from '@material-ui/lab/Pagination';
 import EventCard from './EventCard'
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const useStyles = makeStyles(()=>({
     event:{
@@ -38,6 +39,7 @@ function EventCategory({category}) {
     const [pageCount,setPageCount] = useState(0)
     const [events,setEvents] = useState()
     const [tags,setTags] = useState();
+    const [showfalse,setShowFalse] = useState(false)
 
     const subCategories = [
         'Upcoming','Archived','All Time Favorites'
@@ -50,6 +52,10 @@ function EventCategory({category}) {
     useEffect(()=>{
         loadTags()
     },[])
+
+    useEffect(()=>{
+        if(events){events.length===0?setShowFalse(true):setShowFalse(false)}
+    },[events])
 
     const loadData = async () => {
         try{
@@ -103,11 +109,17 @@ function EventCategory({category}) {
                 events?
                 <div className={classes.event}>
                     <div className={classes.event__body}>
+                        {
+                            showfalse?
+                            <h1>No events found</h1>:null
+                        }
                         <div className={classes.event__cards}>
                             {
-                                events.map(event => (
-                                    <EventCard event={event} key={event.id}/>
-                                ))
+                                events.map(event => {
+                                let show=event.registration_status==='REGISTRATIONS_OPEN'||event.registration_status==='REGISTRATIONS_CLOSED'?true:false
+                                return(
+                                    <EventCard event={event} key={event.id} showReg={show}/>
+                                )})
                             }
                         </div>
                         <div className={classes.events__tags}>
@@ -121,7 +133,7 @@ function EventCategory({category}) {
                     <div className={classes.event__pages}>
                         <Pagination count={pageCount} size="large" onChange={(page)=>setPageNo(parseInt(page.target.innerText))}/>
                     </div>
-                </div>:null
+                </div>:<CircularProgress color="inherit" />
             }
         </div>
     )
