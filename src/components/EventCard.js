@@ -5,7 +5,6 @@ import CardActionArea from '@material-ui/core/CardActionArea';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
-import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
 import Typography from '@material-ui/core/Typography';
 import { Avatar } from '@material-ui/core';
@@ -15,6 +14,9 @@ const useStyles = makeStyles((theme)=>({
   root: {
       margin:'20px 10px',
       maxWidth:600,
+      borderRadius:'10px',
+      height:'fit-content',
+      boxShadow:'0 2px 19px 0 rgb(0 0 0 / 10%)'
   },
   card__pic:{
     position: 'relative'
@@ -58,11 +60,13 @@ const useStyles = makeStyles((theme)=>({
   },
   card__desc:{
       marginTop:'5px',
-      marginBottom:'35px'
+      marginBottom:'35px',
+      textAlign:'left'
   },
   card__tagContainer:{
       display:'flex',
-      marginBottom:'40px'
+      marginBottom:'40px',
+      alignItems:'center'
   },
   card__tag:{
       backgroundColor:'#d3d3d3',
@@ -74,7 +78,7 @@ const useStyles = makeStyles((theme)=>({
   card__footer:{
     display:'flex',
     justifyContent: 'space-between',
-    marginTop:'10px',
+    // marginTop:'10px',
     width:'100%',
     alignItems: 'center',
   },
@@ -113,6 +117,7 @@ export default function EventCard({event,showReg}) {
   const eventStrt =  strTime + ', ' + date.toDateString().substring(4)
   const price = event.fees===0?'Free':`INR ${event.fees}`
   let regtime;
+  let tagcount = 0
 
   if(showReg){
     const regDate = new Date(event.registration_start_time)
@@ -166,41 +171,50 @@ export default function EventCard({event,showReg}) {
           <Divider/>
           <div className={classes.card__desc}>
           <Typography variant="body2" color="textSecondary" component="p">
-          {event.short_desc}
-        </Typography>
+            {event.short_desc}
+          </Typography>
           </div>
           <div className={classes.card__tagContainer}>
           {
-              event.card_tags.map(tag =>(
-                  <div className={classes.card__tag}>{tag}</div>
-              ))
+              event.card_tags.map(tag =>{
+                tagcount++;
+                if(tagcount === 4){
+                  return(
+                    <div style={{color:'#fa7328'}}> + {event.card_tags.length - tagcount +1} more</div>
+                  )
+                }
+                else if(tagcount<=3){
+                  return(
+                    <div className={classes.card__tag}>{tag}</div>
+                  )}
+                })
           }
           </div>
-          <Divider />
         </CardContent>
       </CardActionArea>
+      <Divider />
       <CardActions>
       <div className={classes.card__footer}>
+        {
+          event.registered_users.show_users_count === true ?
+          <div className={classes.card__users}>
+            <div className={classes.card__images}>
               {
-                event.registered_users.show_users_count === true ?
-                <div className={classes.card__users}>
-                  <div className={classes.card__images}>
-                    {
-                      event.registered_users.top_users.map(user =>(
-                        <Tooltip title={user.name} placement="top">
-                        <Avatar src={user.image_url} className={classes.card__footimage}/>
-                        </Tooltip>
-                      ))
-                    }
-                  </div>
-                  <div className={classes.card__footertext}>
-                    and {event.registered_users.other_users_count} others registered
-                  </div>
-                </div>
-                :<div></div>
+                event.registered_users.top_users.map(user =>(
+                  <Tooltip title={user.name} placement="top">
+                  <Avatar src={user.image_url} className={classes.card__footimage}/>
+                  </Tooltip>
+                ))
               }
-              <img height="35" width=""src={`https://files.codingninjas.in/0000000000001272.png`}/>
+            </div>
+            <div className={classes.card__footertext}>
+              and {event.registered_users.other_users_count} others registered
+            </div>
           </div>
+          :<div></div>
+        }
+        <img height="35" src={`https://files.codingninjas.in/0000000000001272.png`} alt=''/>
+      </div>
       </CardActions>
     </Card>
   );

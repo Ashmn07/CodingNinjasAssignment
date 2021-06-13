@@ -5,6 +5,7 @@ import Tab from '@material-ui/core/Tab';
 import Pagination from '@material-ui/lab/Pagination';
 import EventCard from './EventCard'
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Typography from '@material-ui/core/Typography';
 
 const useStyles = makeStyles(()=>({
     event:{
@@ -15,19 +16,38 @@ const useStyles = makeStyles(()=>({
         display:'flex',
     },
     event__tags:{
-        flex:1
+        marginTop:'15px'
     },
     event__cards:{
-        flex:1.5,
+        flex:1,
         display:'grid',
         justifyItems:'center',
         gridTemplateColumns:'1fr 1fr',
     },
     event__pages:{
-        padding:'2',
-        margin:'2',
+        padding:'2px',
+        margin:'2px',
         alignSelf: 'flex-end',
+        display:'flex',
+        alignItems: 'center',
     },
+    event__tag:{
+        backgroundColor:'#eee',
+        margin:'10px 5px',
+        padding:'4px 10px',
+        width:'fit-content',
+        cursor:'pointer'
+    },
+    event__selTag:{
+        backgroundColor:'orange',
+        margin:'10px 5px',
+        padding:'4px 10px',
+        width:'fit-content',
+    },
+    event__pagestext:{
+        padding:'10px',
+        margin:'5px 5px 10px 5px'
+    }
 }))
 
 function EventCategory({category}) {
@@ -40,6 +60,8 @@ function EventCategory({category}) {
     const [events,setEvents] = useState()
     const [tags,setTags] = useState();
     const [showfalse,setShowFalse] = useState(false)
+
+    let bgcolor,col;
 
     const subCategories = [
         'Upcoming','Archived','All Time Favorites'
@@ -54,12 +76,17 @@ function EventCategory({category}) {
     },[])
 
     useEffect(()=>{
+        console.log(tagList)
+    },[tagList])
+
+    useEffect(()=>{
         if(events){events.length===0?setShowFalse(true):setShowFalse(false)}
     },[events])
 
     const loadData = async () => {
         try{
             const url = `https://api.codingninjas.com/api/v3/events?event_category=${category}&event_sub_category=${subCategory}&tag_list=${tagList.toString()}&offset=${(pageNo-1)*20}`;
+            console.log(url)
             const res = await fetch(url)
             const data = await res.json()
             setEvents(data.data.events)
@@ -79,6 +106,21 @@ function EventCategory({category}) {
         }
         catch(err){
             console.error(err)
+        }
+    }
+
+    const handleTags = (tag) => {
+        console.log(tag)
+        if(tagList.includes(tag)){
+            const temp = [...tagList]
+            const newArray = temp.filter(tags => tags!==tag)
+            setTagList(newArray)
+        }
+        else{
+            // classes.event__tag.backgroundColor = 'orange'
+            const updArray = [...tagList]
+            updArray.push(tag)
+            setTagList(updArray)
         }
     }
 
@@ -122,16 +164,32 @@ function EventCategory({category}) {
                                 )})
                             }
                         </div>
-                        <div className={classes.events__tags}>
+                        <div className={classes.event__tags}>
+                            <Typography variant="body1" color="textPrimary" align="left" style={{padding:'5px 0 0 5px'}}>
+                                TAGS
+                            </Typography>
                             {
-                                tags.map(tag =>(
-                                    <p>{tag}</p>
-                                ))
+                                tags.map(tag =>{
+                                    if(tagList.includes(tag)){
+                                        bgcolor='#fa7328'
+                                        col='#fff'
+                                    }
+                                    else{
+                                        bgcolor='#eee'
+                                        col='black'
+                                    }
+                                    return(
+                                    <div className={classes.event__tag} style={{ backgroundColor:`${bgcolor}`,color:`${col}`}} onClick={()=>handleTags(tag)}>
+                                        <Typography variant="body2">
+                                            {tag}
+                                        </Typography>
+                                    </div>
+                                )})
                             }
                         </div>
                     </div>
                     <div className={classes.event__pages}>
-                        <Pagination count={pageCount} size="large" onChange={(page)=>setPageNo(parseInt(page.target.innerText))}/>
+                        <p className={classes.event__pagestext}>Page </p><Pagination count={pageCount} hideNextButton hidePrevButton size="large" onChange={(page)=>{setPageNo(parseInt(page.target.innerText)); window.scrollTo(0,0)}}/>
                     </div>
                 </div>:<CircularProgress color="inherit" />
             }
