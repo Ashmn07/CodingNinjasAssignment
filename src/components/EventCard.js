@@ -13,7 +13,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 const useStyles = makeStyles((theme)=>({
   root: {
       margin:'20px 10px',
-      maxWidth:600,
+      maxWidth:514,
       borderRadius:'10px',
       height:'fit-content',
       boxShadow:'0 2px 19px 0 rgb(0 0 0 / 10%)'
@@ -22,8 +22,7 @@ const useStyles = makeStyles((theme)=>({
     position: 'relative'
   },
   media: {
-      height:220,
-      objectFit:'contain'
+      height:190,
   },
   card__overlay:{
     position:'absolute',
@@ -39,7 +38,7 @@ const useStyles = makeStyles((theme)=>({
   card__heading:{
       fontWeight:'bold',
       lineHeight:1.2,
-      fontSize:'1.1rem'
+      fontSize:'1.1rem',
   },
   card__eventDetails:{
     display:'flex',

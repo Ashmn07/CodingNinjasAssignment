@@ -11,6 +11,10 @@ const useStyles = makeStyles(()=>({
     event:{
         display: 'flex',
         flexDirection: 'column',
+        backgroundColor:'white',
+    },
+    event__subcategory:{
+        backgroundColor:'#eee',
     },
     event__body:{
         display:'flex',
@@ -22,7 +26,7 @@ const useStyles = makeStyles(()=>({
         flex:1,
         display:'grid',
         justifyItems:'center',
-        gridTemplateColumns:'1fr 1fr',
+        gridTemplateColumns:'repeat(2,1fr)',
     },
     event__pages:{
         padding:'2px',
@@ -33,7 +37,7 @@ const useStyles = makeStyles(()=>({
     },
     event__tag:{
         backgroundColor:'#eee',
-        margin:'10px 5px',
+        margin:'10px 14px',
         padding:'4px 10px',
         width:'fit-content',
         cursor:'pointer'
@@ -45,9 +49,9 @@ const useStyles = makeStyles(()=>({
         width:'fit-content',
     },
     event__pagestext:{
-        padding:'10px',
-        margin:'5px 5px 10px 5px'
-    }
+        padding:'7px',
+        margin:'5px 0px 10px 5px'
+    },
 }))
 
 function EventCategory({category}) {
@@ -68,16 +72,25 @@ function EventCategory({category}) {
     ]
 
     useEffect(()=>{
+        if(subCategory==='Upcoming'){
+            setTagList([])
+            setPageNo(1)
+            loadData()
+        }else setSubCategory('Upcoming')
+    },[category])
+
+    useEffect(()=>{
         loadData()
-    },[category,subCategory,tagList,pageNo])
+    },[pageNo,tagList])
 
     useEffect(()=>{
         loadTags()
     },[])
 
     useEffect(()=>{
-        console.log(tagList)
-    },[tagList])
+        setTagList([])
+        setPageNo(1)
+    },[subCategory])
 
     useEffect(()=>{
         if(events){events.length===0?setShowFalse(true):setShowFalse(false)}
@@ -86,7 +99,6 @@ function EventCategory({category}) {
     const loadData = async () => {
         try{
             const url = `https://api.codingninjas.com/api/v3/events?event_category=${category}&event_sub_category=${subCategory}&tag_list=${tagList.toString()}&offset=${(pageNo-1)*20}`;
-            console.log(url)
             const res = await fetch(url)
             const data = await res.json()
             setEvents(data.data.events)
@@ -117,7 +129,6 @@ function EventCategory({category}) {
             setTagList(newArray)
         }
         else{
-            // classes.event__tag.backgroundColor = 'orange'
             const updArray = [...tagList]
             updArray.push(tag)
             setTagList(updArray)
@@ -130,7 +141,7 @@ function EventCategory({category}) {
 
     return (
         <div>
-            <div>
+            <div className={classes.event__subcategory}>
             <Tabs
             value={subCategory}
             onChange={handleChange}
@@ -189,7 +200,7 @@ function EventCategory({category}) {
                         </div>
                     </div>
                     <div className={classes.event__pages}>
-                        <p className={classes.event__pagestext}>Page </p><Pagination count={pageCount} hideNextButton hidePrevButton size="large" onChange={(page)=>{setPageNo(parseInt(page.target.innerText)); window.scrollTo(0,0)}}/>
+                        <p className={classes.event__pagestext}>Page </p><Pagination page={pageNo} count={pageCount} hideNextButton hidePrevButton size="large" onChange={(page)=>{setPageNo(parseInt(page.target.innerText)); window.scrollTo(0,0)}}/>
                     </div>
                 </div>:<CircularProgress color="inherit" />
             }
