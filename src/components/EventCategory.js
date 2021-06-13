@@ -77,10 +77,12 @@ function EventCategory({category}) {
             setPageNo(1)
             loadData()
         }else setSubCategory('Upcoming')
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     },[category])
 
     useEffect(()=>{
         loadData()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     },[pageNo,tagList])
 
     useEffect(()=>{

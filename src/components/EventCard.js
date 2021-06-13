@@ -1,4 +1,4 @@
-import React,{useState} from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
@@ -175,7 +175,7 @@ export default function EventCard({event,showReg}) {
           </div>
           <div className={classes.card__tagContainer}>
           {
-              event.card_tags.map(tag =>{
+              event.card_tags.map((tag) =>{
                 tagcount++;
                 if(tagcount === 4){
                   return(
@@ -186,6 +186,7 @@ export default function EventCard({event,showReg}) {
                   return(
                     <div className={classes.card__tag}>{tag}</div>
                   )}
+                  else return null
                 })
           }
           </div>
