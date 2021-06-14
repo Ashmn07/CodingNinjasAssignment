@@ -64,6 +64,7 @@ function EventCategory({category}) {
     const [events,setEvents] = useState()
     const [tags,setTags] = useState();
     const [showfalse,setShowFalse] = useState(false)
+    const [tagLimit,setTagLimit] = useState(12)
 
     let bgcolor,col;
 
@@ -124,7 +125,6 @@ function EventCategory({category}) {
     }
 
     const handleTags = (tag) => {
-        console.log(tag)
         if(tagList.includes(tag)){
             const temp = [...tagList]
             const newArray = temp.filter(tags => tags!==tag)
@@ -140,6 +140,28 @@ function EventCategory({category}) {
     const handleChange = (event, newValue) => {
         setSubCategory(newValue);
     };
+
+    const fewTags = tags?tags.slice(0,tagLimit).map(tag=>{
+        if(tagList.includes(tag)){
+            bgcolor='#fa7328'
+            col='#fff'
+        }
+        else{
+            bgcolor='#eee'
+            col='black'
+        }
+        return(
+        <div className={classes.event__tag} style={{ backgroundColor:`${bgcolor}`,color:`${col}`}} onClick={()=>handleTags(tag)}>
+            <Typography variant="body2">
+                {tag}
+            </Typography>
+        </div>
+        )}):null
+
+    const handleTagsClick = () => {
+        document.getElementById('moreTags').style.display='None';
+        setTagLimit(tags.length)
+    }
 
     return (
         <div>
@@ -181,24 +203,11 @@ function EventCategory({category}) {
                             <Typography variant="body1" color="textPrimary" align="left" style={{padding:'5px 0 0 5px'}}>
                                 TAGS
                             </Typography>
-                            {
-                                tags.map(tag =>{
-                                    if(tagList.includes(tag)){
-                                        bgcolor='#fa7328'
-                                        col='#fff'
-                                    }
-                                    else{
-                                        bgcolor='#eee'
-                                        col='black'
-                                    }
-                                    return(
-                                    <div className={classes.event__tag} style={{ backgroundColor:`${bgcolor}`,color:`${col}`}} onClick={()=>handleTags(tag)}>
-                                        <Typography variant="body2">
-                                            {tag}
-                                        </Typography>
-                                    </div>
-                                )})
-                            }
+                            {fewTags}
+                            <Typography variant="body2" align="left" id="moreTags"
+                             style={{padding:'5px',margin:'5px',color:'#fa7328',fontWeight:'600',cursor:'pointer'}} onClick={handleTagsClick}>
+                                See 10 more tags
+                            </Typography>
                         </div>
                     </div>
                     <div className={classes.event__pages}>

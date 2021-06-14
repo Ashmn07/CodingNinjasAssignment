@@ -7,7 +7,7 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Divider from '@material-ui/core/Divider';
 import Typography from '@material-ui/core/Typography';
-import { Avatar } from '@material-ui/core';
+import Avatar from '@material-ui/core/Avatar';
 import Tooltip from '@material-ui/core/Tooltip';
 
 const useStyles = makeStyles((theme)=>({
@@ -43,7 +43,6 @@ const useStyles = makeStyles((theme)=>({
   card__eventDetails:{
     display:'flex',
     flexDirection:'column',
-    // margin:'5px',
   },
   card__event:{
     display:'flex',
@@ -77,7 +76,6 @@ const useStyles = makeStyles((theme)=>({
   card__footer:{
     display:'flex',
     justifyContent: 'space-between',
-    // marginTop:'10px',
     width:'100%',
     alignItems: 'center',
   },
@@ -109,7 +107,7 @@ export default function EventCard({event,showReg}) {
   let minutes = date.getMinutes();
   let ampm = hours >= 12 ? 'PM' : 'AM';
   hours = hours % 12;
-  hours = hours ? hours : 12; // the hour '0' should be '12'
+  hours = hours ? hours : 12; 
   hours = hours < 10 ? '0' + hours : hours
   minutes = minutes < 10 ? '0'+ minutes : minutes;
   let strTime = hours + ':' + minutes + ' ' + ampm;
@@ -124,7 +122,7 @@ export default function EventCard({event,showReg}) {
     minutes = regDate.getMinutes();
     ampm = hours >= 12 ? 'PM' : 'AM';
     hours = hours % 12;
-    hours = hours ? hours : 12; // the hour '0' should be '12'
+    hours = hours ? hours : 12; 
     hours = hours < 10 ? '0' + hours : hours
     minutes = minutes < 10 ? '0'+ minutes : minutes;
     regtime = 'Registrations open till ' + regDate.toDateString().substring(4,10) + ', ' + hours + ':' + minutes + ' ' + ampm;
