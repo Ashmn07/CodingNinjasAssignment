@@ -188,7 +188,7 @@ function EventCategory({category}) {
                     <div className={classes.event__body}>
                         {
                             showfalse?
-                            <h1>No events found</h1>:null
+                            <h1 style={{textAlign: 'center'}}>No events found</h1>:null
                         }
                         <div className={classes.event__cards}>
                             {
@@ -213,7 +213,7 @@ function EventCategory({category}) {
                     <div className={classes.event__pages}>
                         <p className={classes.event__pagestext}>Page </p><Pagination page={pageNo} count={pageCount} hideNextButton hidePrevButton size="large" onChange={(page)=>{setPageNo(parseInt(page.target.innerText)); window.scrollTo(0,0)}}/>
                     </div>
-                </div>:<CircularProgress color="inherit" />
+                </div>:<CircularProgress color="inherit"/>
             }
         </div>
     )
